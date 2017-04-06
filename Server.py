@@ -6,7 +6,7 @@ from bottle import route, run, request, auth_basic
 from datetime import datetime
 from hashlib import sha512
 
-from Database import db
+from Database import db, Base
 
 @route('/register', method='POST')
 def register():
@@ -60,3 +60,5 @@ def upload():
 		return False
 	return True
 
+if __name__ == '__main__':
+	run(host='127.0.0.1', port=8101)
