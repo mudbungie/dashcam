@@ -25,8 +25,7 @@ def register():
 	ip = request.environ.get('REMOTE_ADDR')
 
 	# Hand it to the database. It won't be valid until flag is changed.
-	db.register(user, password, ip)
-	return True
+	return db.register(user, password, ip)
 
 # Functions from here down require authentication.
 def authenticate(username, password):

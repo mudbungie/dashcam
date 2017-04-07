@@ -47,9 +47,10 @@ class db:
 			s.add(user)
 			s.commit()
 			s.close()
-		except:
-			#FIXME Catch collision errors
-			raise
+			return True
+		except sqla.exc.IntegrityError:
+			logging.warn('Duplicate user registration.')
+			return False
 	
 	@property
 	def users(self):

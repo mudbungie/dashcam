@@ -43,6 +43,7 @@ def register(s):
 	try:
 		r = requests.post('{}/register'.format(server_url),
 			data={'user':username, 'password':password})
+		print(r.text)
 		if r.status_code == 200:
 			logging.info('Registration of user {} successful.'.format(username))
 			return True
