@@ -36,7 +36,7 @@ def authenticate(username, password):
 	return False
 
 @route('/')
-#@auth_basic(authenticate)
+@auth_basic(authenticate)
 def index():
 	return 'Yep, this is the server.'
 

@@ -6,7 +6,6 @@ from uuid import uuid4
 from hashlib import sha512
 from sys import argv
 
-server_url = 'https://dash.mudbungie.net'
 
 # Fetches or creates username and password
 def get_auth():
@@ -85,4 +84,5 @@ def upload(video_path):
 	return False
 
 if __name__ == '__main__':
+	server_url = argv[2]
 	upload(argv[1])
