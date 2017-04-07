@@ -5,6 +5,7 @@
 from bottle import route, run, request, auth_basic
 from datetime import datetime
 from hashlib import sha512
+import re
 
 from Database import db, Base
 db = db()
@@ -15,7 +16,9 @@ def register():
 	password = request.POST['password']
 
 	# Throw out anything that isn't alphanumeric.
-	if not user.isalpha() or not password.isalpha():
+	regex = re.compile(r'^[\w-]+$')
+	if not regex.match(user) or not regex.match(password):
+		logging.warn('Invalid user/pass: {} {}'.format(user, password))
 		return False
 
 	password = sha512(password.encode()).hexdigest()
