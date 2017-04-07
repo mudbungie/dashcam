@@ -7,6 +7,7 @@ from datetime import datetime
 from hashlib import sha512
 
 from Database import db, Base
+db = db()
 
 @route('/register', method='POST')
 def register():

@@ -11,18 +11,45 @@ from sys import argv
 def get_auth():
 	try:
 		with open('dash.auth') as authfile:
-			return [l.strip() for l in authfile.readlines()]
+			auth = [l.strip() for l in authfile.readlines() if l]
+			if auth:
+				return auth
 	except FileNotFoundError:
-		with open('dash.auth', 'w') as authfile:
-			authfile.write(uuid4.hex() + '\n' + uuid4.hex())
-			return get_auth()
+		pass # If it's not there, the failure case creates it.
+	with open('dash.auth', 'w') as authfile:
+		authfile.write(str(uuid4()) + '\n' + str(uuid4()))
+		authfile.close()
+		return get_auth()
 
 def verify_server(s):
 	try:
-		requests.get(server_url)
-		return True
+		r = requests.get(server_url)
+		if r.status_code == 200:
+			return True
+		elif r.status_code == 401:
+			return False
+		else:
+			logging.error(('Unexpected status code {} while attempting communication '
+				'with {}'.format(r.status_code, server_url)))
+			
+	except requests.exceptions.RequestException:
+		logging.error('Unknown error while attempting communication with {}'.\
+			format(server_url))
+
+def register(s):
+	username, password = s.auth
+	try:
+		r = requests.post('{}/register'.format(server_url),
+			data={'user':username, 'password':password})
+		if r.status_code == 200:
+			logging.info('Registration of user {} successful.'.format(username))
+			return True
+		else:
+			logging.warn('Registration unsuccessful.')
+			return False
 	except requests.exceptions.RequestException:
 		raise
+		logging.error('Unknown error while registering.')
 
 def check_for_video(s, video, video_hash):
 	try:
@@ -47,7 +74,7 @@ def post_video(s, video):
 		logging.error('Unexpected error while posting video.')
 		return False
 	
-
+# Main function.
 def upload(video_path):
 	with open(video_path, 'rb') as video_file:
 		video = video_file.read()
@@ -58,6 +85,7 @@ def upload(video_path):
 
 	s = requests.Session()
 	s.auth = get_auth()
+	print(s.auth)
 
 	try:
 		if verify_server(s):
@@ -72,6 +100,7 @@ def upload(video_path):
 			else:
 				logging.info('Video with hash {} already uploaded.'.format(video_hash))
 		else:
+			register(s)
 			logging.error('Communication with server failed.')
 
 	except requests.exceptions.HTTPError:

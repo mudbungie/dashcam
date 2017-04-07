@@ -29,10 +29,14 @@ class Video(Base):
 	upload_name = Column(Text)
 	size = Column(Integer)
 
+if __name__ == '__main__':
+	Base.metadata.create_all(engine)
+	
+
 # Front-end for importation and reference.
 class db:
 	def __init__(self):
-		Base.metadata.create_all()
+		Base.metadata.create_all(engine)
 		self.s = Session
 
 	def register(username, password, ip):
