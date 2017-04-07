@@ -6,6 +6,8 @@ from uuid import uuid4
 from hashlib import sha512
 from sys import argv
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 # Fetches or creates username and password
 def get_auth():
@@ -78,14 +80,12 @@ def post_video(s, video):
 def upload(video_path):
 	with open(video_path, 'rb') as video_file:
 		video = video_file.read()
-	print(video)
 	video_hash = sha512(video).hexdigest()
 	logging.debug('Beginning transaction regarding video with hash {}'.\
 		format(video_hash))
 
 	s = requests.Session()
 	s.auth = get_auth()
-	print(s.auth)
 
 	try:
 		if verify_server(s):
@@ -101,7 +101,6 @@ def upload(video_path):
 				logging.info('Video with hash {} already uploaded.'.format(video_hash))
 		else:
 			register(s)
-			logging.error('Communication with server failed.')
 
 	except requests.exceptions.HTTPError:
 		#FIXME check that the error code is 401.

@@ -39,12 +39,12 @@ class db:
 		Base.metadata.create_all(engine)
 		self.s = Session
 
-	def register(username, password, ip):
+	def register(self, username, password, ip):
 		s = self.s()
 		try:
 			user = User(username=username, password=password, registration_ip=ip,
 				registration_date=datetime.now())
-			s.add()
+			s.add(user)
 			s.commit()
 			s.close()
 		except:
@@ -52,17 +52,17 @@ class db:
 			raise
 	
 	@property
-	def users():
+	def users(self):
 		s = self.s()
 		us = [u.__dict__ for u in s.query(User).all()]
 		s.close()
 		return us
 
 	@property
-	def authorized_users():
+	def authorized_users(self):
 		return [u for u in self.users if u['authorized']]
 
-	def video_exists(video_hash):
+	def video_exists(self, video_hash):
 		s = self.s()
 		if s.query(Video).filter(video_hash=video_hash).one_or_none():
 			exists = True
@@ -71,9 +71,12 @@ class db:
 		s.close()
 		return exists
 		
-	def insert_video_data(video_hash, upload_name, video_size):
+	def insert_video_data(self, video_hash, upload_name, video_size):
 		s = self.s()
 		video = Video(video_hash=video_hash, path='videos/'+video_hash, 
 			upload_time=datetime.now(), upload_name=upload_name, size=video_size)
+		s.add(video)
+		s.commit()
+
 
 
