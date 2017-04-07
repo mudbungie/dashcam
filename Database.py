@@ -7,6 +7,7 @@ import sqlalchemy as sqla
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+import logging
 
 engine = create_engine('sqlite:///dashcam.db')
 meta = MetaData()

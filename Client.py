@@ -43,16 +43,15 @@ def register(s):
 	try:
 		r = requests.post('{}/register'.format(server_url),
 			data={'user':username, 'password':password})
-		print(r.text)
-		if r.status_code == 200:
+		if r.text == 'Success':
 			logging.info('Registration of user {} successful.'.format(username))
 			return True
 		else:
 			logging.warn('Registration unsuccessful.')
 			return False
 	except requests.exceptions.RequestException:
-		raise
 		logging.error('Unknown error while registering.')
+		raise
 
 def check_for_video(s, video, video_hash):
 	try:

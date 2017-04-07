@@ -20,13 +20,15 @@ def register():
 	regex = re.compile(r'^[\w-]+$')
 	if not regex.match(user) or not regex.match(password):
 		logging.warn('Invalid user/pass: {} {}'.format(user, password))
-		return False
+		return 'Failure'
 
 	password = sha512(password.encode()).hexdigest()
 	ip = request.environ.get('REMOTE_ADDR')
 
 	# Hand it to the database. It won't be valid until flag is changed.
-	return db.register(user, password, ip)
+	if db.register(user, password, ip):
+		return 'Success'
+	return 'Failure'
 
 # Functions from here down require authentication.
 def authenticate(username, password):
