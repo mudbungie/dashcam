@@ -2,10 +2,11 @@
 # videos, and stores a local database of uploaded video hashes, which drives
 # assertions of which videos exist.
 
-from bottle import route, run, request, auth_basic
+from bottle import route, run, request, auth_basic, response
 from datetime import datetime
 from hashlib import sha512
 import re
+import logging
 
 from Database import db, Base
 db = db()
