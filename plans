@@ -1,0 +1,27 @@
+Okay, so the main idea here is to have a system for recording a series of video files. Upload them to the server whenever able, though that's going to be based on whether or not the system is connected to a wifi network with internet access.
+
+Components:
+    Record:
+        Records video.
+        Loops at some duration.
+        Deletes the oldest video when over a specified disk usage.
+    Upload:
+        When a condition is met, upload to server.
+            When connected to specific wifi network?
+            Whenever there is an uplink?
+        Has to upload only what's new.
+            Everything's sequential, so it might be reasonable to just have a 
+                latest sent marker, which advances.
+                Problem: never trust clients.
+            Store a boolean flag of everything that has not uploaded.
+                Problem: never trust clients.
+            Send JSON/XML/list of all files, sever asks for whatever.
+                Problem: list becomes large.
+                    Solution, only send most recent some.
+                        Also, maybe purge old records. 
+    Server:
+        Authenticates sources.
+        Receives videos.
+            Needs to not accept videos that already exist.
+        Deletes videos after a certain storage limit.
+            The feature to never finish, lol

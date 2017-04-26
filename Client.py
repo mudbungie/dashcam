@@ -86,6 +86,7 @@ def upload(video_path):
 
 	s = requests.Session()
 	s.auth = get_auth()
+	print(s.auth)
 
 	try:
 		if verify_server(s):
